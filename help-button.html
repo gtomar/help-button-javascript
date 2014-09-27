@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+$( document ).ajaxComplete(function( event, xhr, settings ) {
+    
+    var url = settings.url;   
+    var regX  = /\/discussion\/.*\/threads\/create\?ajax=1/; // regular expression for URLs of  ajax calls for creation of discussion posts
+
+    // We are interested only in Ajax calls for creation of discussion posts
+  	if ( regX.test(url)) {
+
+        var data = JSON.parse(xhr.responseText);
+    
+    	var content     = data.content;
+    	var title       = content.title.toString();
+    	var body        = content.body.toString();
+    	var threadId    = content.id.toString();
+      
+    	var re1 = /create\?ajax=1/g;
+    	url = url.replace(re1,threadId);  
+ 
+        // Question recommendation system server URL
+		var helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2001/";
+        
+        // Make an Ajax call to the question recommendation system server when a new post is created via help button
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: helpBackEndURL,
+            data: { "title": title, "body": body,"threadId": threadId, "url": url},
+            async: false,
+            dataType: "jsonp",
+            jsonp: "callback",
+            jsonpCallback:"callback",
+            // Callback function which will pop up candidates suggested by question recommendation system
+            success: function (data) {
+                var htmlContent = data; // It contains information about candidates 
+                                        // suggested by question recommendation system 
+                
+                //Open window which will allow to choose among candidates suggested by question recommendation system
+                var opened_window = window.open("", "mywindow","menubar=1,resizable=1,width=1000,height=800");
+                opened_window.document.write(htmlContent);
+                opened_window.onbeforeunload = closingCode;
+                
+                function closingCode(){
+                    var re2 = /\/discussion\//g;
+    				url = url.replace(re2,"/discussion/forum/"); 
+			        document.getElementById("help").innerHTML = "Your help request has been sent to helper(s) selected by you and it can be accessed <a href=\"localhost:8000" + url + "\">here</a> in discussion forum.";
+   			        return null;
+			    }
+            }
+        });
+ 	}
+});
+  
+
+</script>
+</head>
+
+<body>
+
+<h1>Quick Help</h1>
+
+<div id="help">Enter your help request below, and we will find some helpers for you.</div>
+
+
+</body>
+</html>
