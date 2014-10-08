@@ -8,7 +8,9 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
     var regX  = /\/discussion\/.*\/threads\/create\?ajax=1/; // regular expression for URLs of  ajax calls for creation of discussion posts
 
     // We are interested only in Ajax calls for creation of discussion posts
-    if ( regX.test(url)) {
+  	if ( regX.test(url)) {
+
+        document.getElementById("help").innerHTML = "In a moment, we will show you some fellow students who should be able to answer your question.";
 
         var data = JSON.parse(xhr.responseText);
     
@@ -16,38 +18,39 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
     	var title       = content.title.toString();
     	var body        = content.body.toString();
     	var threadId    = content.id.toString();
+        var userId      = content.user_id.toString();
       
     	var re1 = /create\?ajax=1/g;
     	url = url.replace(re1,threadId);  
  
         // Question recommendation system server URL
-	var helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2014/";
+		var helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2015/";
         
         // First ajax call to check if server is up
         // If server is not up (may be for maintenance), we will hit back-up server
         // Second ajax call to actually hit the server giving input and getting output
-	$.ajax({
-                url: helpBackEndURL,
+		$.ajax({
+            url: helpBackEndURL,
         	type: "HEAD",
         	timeout:1000,
         	statusCode: {
-            	    400: function (response) {
-                        // Back-up server
-                        helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2011/";
-            	    },
-            	    0: function (response) {
-                        // Back-up server
-                        helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2011/";
-            	    }              
+            	400: function (response) {
+                    // Back-up server
+                    helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2011/";
+            	},
+            	0: function (response) {
+                    // Back-up server
+                    helpBackEndURL = "http://erebor.lti.cs.cmu.edu:2011/";
+            	}              
         	},
-                complete: function() {
+            complete: function() {
 
         		// Make an Ajax call to the question recommendation system server when a new post is created via help button
-        	    $.ajax({
+        		$.ajax({
             		type: "POST",
             		contentType: "application/json; charset=utf-8",
             		url: helpBackEndURL,
-            		data: { "title": title, "body": body,"threadId": threadId, "url": url},
+                  data: { "title": title, "body": body,"threadId": threadId, "url": url, "userId" : userId },
             		async: false,
             		dataType: "jsonp",
             		jsonp: "callback",
@@ -67,12 +70,12 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
     						url = url.replace(re2,"/discussion/forum/"); 
 			        		document.getElementById("help").innerHTML = "Your help request has been sent to the helper(s) selected by you and it can be accessed <a href=\"localhost:8000" + url + "\">here</a> in the discussion forum.";
    			        		return null;
-			    	}
+			    		}
             		}
-        	    });
-            	}
- 	});
-    }
+        		});
+            }
+ 		});
+ 	}
 });
   
 
@@ -81,7 +84,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
 
 <body>
 
-<h1>Find Help</h1>
+<h1>Quick Helper</h1>
 
 <div id="help">Enter your help request below, and we will find some helpers to invite to your discussion thread.</div>
 
