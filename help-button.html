@@ -24,7 +24,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
     	url = url.replace(re1,threadId);  
  
         // Question recommendation system server URL
-		var helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2030/";
+		var helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2020/";
         
         // First ajax call to check if server is up
         // If server is not up (may be for maintenance), we will hit back-up server
@@ -36,11 +36,11 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
         	statusCode: {
             	400: function (response) {
                     // Back-up server
-                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2031/";
+                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2021/";
             	},
             	0: function (response) {
                     // Back-up server
-                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2031/";
+                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2021/";
             	}              
         	},
             complete: function() {
