@@ -24,7 +24,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
     	url = url.replace(re1,threadId);  
  
         // Question recommendation system server URL
-		var helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2020/";
+		var helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2030/";
         
         // First ajax call to check if server is up
         // If server is not up (may be for maintenance), we will hit back-up server
@@ -36,11 +36,11 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
         	statusCode: {
             	400: function (response) {
                     // Back-up server
-                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2021/";
+                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2031/";
             	},
             	0: function (response) {
                     // Back-up server
-                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2021/";
+                    helpBackEndURL = "https://erebor.lti.cs.cmu.edu:2031/";
             	}              
         	},
             complete: function() {
@@ -59,18 +59,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
             		success: function (data, textStatus, XMLHttpRequest) {
                 		var htmlContent = data; // It contains information about candidates 
                                         		// suggested by question recommendation system 
-                
-                		//Open window which will allow to choose among candidates suggested by question recommendation system
-                		var opened_window = window.open("", "mywindow","menubar=1,resizable=1,width=1000,height=800");
-                		opened_window.document.write(htmlContent);
-                		opened_window.onbeforeunload = closingCode;
-                
-                		function closingCode(){
-                    		var re2 = /\/discussion\//g;
-    						url = url.replace(re2,"/discussion/forum/"); 
-			        		document.getElementById("help").innerHTML = "Your help request has been sent to the helper(s) selected by you and it can be accessed <a href=\"https://www.edx.org/" + url + "\">here</a> in the discussion forum.";
-   			        		return null;
-			    		}
+                        document.getElementById("help").innerHTML = htmlContent;
             		}
         		});
             }
