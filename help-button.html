@@ -11,6 +11,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
   	if ( regX.test(url)) {
 
         document.getElementById("help").innerHTML = "In a moment, we will show you some fellow students who should be able to answer your question.";
+        $('html,body').animate({scrollTop: $('#title').offset().top}, 'slow');
 
         var data = JSON.parse(xhr.responseText);
     
@@ -60,6 +61,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
                 		var htmlContent = data; // It contains information about candidates 
                                         		// suggested by question recommendation system 
                         document.getElementById("help").innerHTML = htmlContent;
+                        $('html,body').animate({scrollTop: $('#title').offset().top}, 'slow');
             		}
         		});
             }
@@ -73,7 +75,7 @@ $( document ).ajaxComplete(function( event, xhr, settings ) {
 
 <body>
 
-<h1>Quick Helper</h1>
+<div id ="title"><h1>Quick Helper</h1></div>
 
 <div id="help">Enter your help request below, and we will find some helpers to invite to your discussion thread.</div>
 
