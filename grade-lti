@@ -1,0 +1,104 @@
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var lti = require('ims-lti');
+var consumer_key = "XXXXXXXX";
+var consumer_secret = "XXXXXXX";
+
+//variables for grading
+var url = require('url');
+var request = require('request');
+var OAuth   = require('oauth-1.0a');
+var Crypto = require("crypto");
+
+var generateXML = function(lis_result_sourcedid , curScore){
+    var result = '<?xml version = "1.0" encoding = "UTF-8"?>'
+               + '<imsx_POXEnvelopeRequest xmlns = "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0">'
+               + '<imsx_POXHeader>'
+               + '<imsx_POXRequestHeaderInfo>'
+               + '<imsx_version>V1.0</imsx_version>'
+               + '<imsx_messageIdentifier>99999999123</imsx_messageIdentifier>'
+               + '</imsx_POXRequestHeaderInfo>'
+               + '</imsx_POXHeader>'
+               + '<imsx_POXBody>'
+               + '<replaceResultRequest>'
+               + '<resultRecord>'
+               + '<sourcedGUID>'
+               + '<sourcedId>' + lis_result_sourcedid + '</sourcedId>'
+               + '</sourcedGUID>'
+               + '<result>'
+               + '<resultScore>'
+               + '<language>en</language>'
+               + '<textString>' + curScore + '</textString>'
+               + '</resultScore>'
+               + '</result>'
+               + '</resultRecord>'
+               + '</replaceResultRequest>'
+               + '</imsx_POXBody>'
+               + '</imsx_POXEnvelopeRequest>';
+    return result;
+}
+
+var generateRequest = function(Url,lis_result_sourcedid,curScore){
+    var postHead = {
+        url: Url,
+        method: 'POST',
+        'content-type': 'application/xml',
+        data: generateXML(lis_result_sourcedid,curScore)
+    };
+
+    return postHead;
+}
+
+
+app.post('/',function(req, res) {
+    var provider = new lti.Provider(consumer_key, consumer_secret);
+    var isValidG = false;
+    provider.valid_request(req,function(err,isValid){
+        isValidG = isValid;
+    });
+    if(isValidG){
+        res.writeHead(301,{Location: 'http://erebor.lti.cs.cmu.edu:8015/chat/computer_parts_0/'+provider.userId+'/'});
+        res.end();
+
+        //grading
+        var score = 0.5; //dummy grade
+
+        if(score >=0 && score <=1){
+        
+            outcome_url = provider.lis_outcome_service_url;
+            //outcome_url = outcome_url.replace("https","http");
+            outcome_url = outcome_url.replace("localhost",req.ip);
+            result_sourcedid = provider.lis_result_sourcedid;
+            //result_sourcedid = result_sourcedid.replace("https","http");
+            result_sourcedid = result_sourcedid.replace("localhost",req.ip);
+
+            //building OAuth
+            var oauth = OAuth({
+                consumer: {
+                    public: consumer_key,
+                    secret: consumer_secret
+                },
+                signature_method: 'HMAC-SHA1'
+            });
+            
+            var oauth_body_hash = Crypto.createHash('sha1').update(generateXML(result_sourcedid,score)).digest().toString('base64');
+            
+            request({
+                url: outcome_url,
+                method: 'POST',
+                //followAllRedirects:"true",
+                //https: "false",
+                'content-type': 'application/xml',
+                form: generateXML(result_sourcedid,score),
+                headers: oauth.toHeader( oauth.authorize( generateRequest(outcome_url, result_sourcedid, score),oauth_body_hash))
+            },function(err,res){
+                console.log("res.body: "+res.body);
+            });
+        }
+    }else{
+        res.end("Invalid consumer secret and consumer key!");
+    }
+
+
+}).listen(8080);
