@@ -145,7 +145,7 @@
         width:100%;
 	overflow-x:hidden;        
         overflow-y:scroll;
-        #height:600px;
+        #height:200px;
         
         height: 100%;
     }
@@ -183,7 +183,7 @@
 
         left:430px;
         min-width:300px;
-        #max-width:800px;
+        #max-width:100px;
         right:30px;
     }
     
@@ -197,7 +197,7 @@
         height:100%;
         position:fixed;
 
-        width:800px;
+        width:600px;
     }
     
     
@@ -215,7 +215,7 @@
     {
         overflow:scroll
         min-height:400px;
-        #width:1000px;
+        #width:100px;
     }
     
     #image_url_input
@@ -333,7 +333,7 @@
         display:block;
         clear:both;
         padding:5px;
-        max-width:200px;
+        max-width:100px;
     }
         
     .chem_comment
@@ -344,7 +344,7 @@
     
     .chem_notes
     {
-        width:400px;
+        width:100px;
         height:50px
     }
 
