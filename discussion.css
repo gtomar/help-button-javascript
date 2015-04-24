@@ -278,13 +278,13 @@
 			background: #FEE25F;
 		}
 		#connected {
-			width: 440px;
+			width: 100px;
 			overflow: hidden;
 			margin: auto;
 		}
 		.connected {
 			float: left;
-			width: 200px;
+			width: 100px;
 		}
 		.connected.no2 {
 			float: right;
@@ -333,7 +333,7 @@
         display:block;
         clear:both;
         padding:5px;
-        max-width:600px;
+        max-width:200px;
     }
         
     .chem_comment
