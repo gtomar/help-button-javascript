@@ -179,9 +179,9 @@
         height:100%;
         position:fixed;
 
-        left:630px;
-        min-width:100px;
-        max-width:100px;
+        left:1000px;
+        min-width:600px;
+        max-width:600px;
         right:30px;
     }
     
