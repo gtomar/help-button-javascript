@@ -197,7 +197,7 @@
         height:100%;
         position:fixed;
 
-        width:50%;
+        width:66%;
     }
     
     
