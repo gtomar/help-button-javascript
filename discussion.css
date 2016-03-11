@@ -2,7 +2,7 @@
     body
     {
         font-family: Oxygen;
-        background-color:#66bbff;
+        background-color:#000080;
     }
     div,input,button
     {
@@ -79,8 +79,6 @@
     {
         padding-left:10px;
         padding-right:10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
         float:left;
         width:90%;
         height:auto;
@@ -182,8 +180,8 @@
         position:fixed;
 
         left:67%;
-        min-width:33%;
-        max-width:33%;
+        min-width:50%;
+        max-width:50%;
         right:30px;
     }
     
@@ -197,7 +195,7 @@
         height:100%;
         position:fixed;
 
-        width:66%;
+        width:50%;
     }
     
     
