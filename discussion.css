@@ -179,9 +179,9 @@
         height:100%;
         position:fixed;
 
-        left:50%;
-        min-width:50%;
-        max-width:50%;
+        left:67%;
+        min-width:33%;
+        max-width:33%;
         right:30px;
     }
     
@@ -195,7 +195,7 @@
         height:100%;
         position:fixed;
 
-        width:48%;
+        width:66%;
     }
     
     
