@@ -448,9 +448,9 @@ app.get('/',function(req, res) {
                     var user_data = DELIM + userId + DELIM + instance_id + DELIM + showBadges + DELIM + relevantORirrelevant + DELIM + showVoting + DELIM + realORanonymous + DELIM + idORname + DELIM + helperId[0][0] + DELIM + helperId[1][0] + DELIM + helperId[2][0] + DELIM + title + DELIM + body + DELIM + postLink + DELIM;
                     userLogger.log('info', user_data);
               
-                   //Helper User ID,  Instance ID, Name Shown, Badge URL, # Previous Help Requests (from Diyi’s), Matching Sentence
+                   //Helper User ID,  Instance ID, Name Shown, Badge URL, # Previous Help Requests (from Diyi’s), Relevant Sentence, Irrelevant Sentence
                   for(var i=0; i < helpers.length; i++){
-                      var helper_data = DELIM + helperId[i][0] + DELIM + instance_id + DELIM + helperId[i][1] + DELIM + badges[i][showBadges] + DELIM + badges[i][2] + DELIM + descriptions[i][0] + DELIM;
+                      var helper_data = DELIM + helperId[i][0] + DELIM + instance_id + DELIM + helperId[i][1] + DELIM + badges[i][showBadges] + DELIM + badges[i][2] + DELIM + descriptions[i][0] + DELIM + descriptions[i][1] + DELIM;
                       helperLogger.log('info', helper_data);   
                   }
                 }
